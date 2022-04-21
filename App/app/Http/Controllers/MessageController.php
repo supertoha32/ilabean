@@ -49,6 +49,14 @@ class MessageController extends Controller
         $item = Item::findOrFail($id);
         $from_id = Auth::id();
         $to_id = $item->user_id;
+        if(request()->get('body') != null) {
+            Message::create([
+                'item_id' => $item->id,
+                'from_id' => $from_id,
+                'to_id' => $to_id,
+                'body' => request()->get('body'),
+            ]);
+        }
         Message::create([
             'item_id' => $item->id,
             'from_id' => $from_id,
@@ -61,7 +69,8 @@ class MessageController extends Controller
 
     public function approveRequest($id)
     {
-        if (\auth()->id() == Item::findOrFail($id)->user_id) {
+        $item = Item::findOrFail($id);
+        if (\auth()->id() == $item->user_id) {
             Message::create([
                 'item_id' => $id,
                 'from_id' => \auth()->id(),
@@ -69,17 +78,11 @@ class MessageController extends Controller
                 'type' => 'APPROVE',
                 'body' => ''
             ]);
-            foreach (Message::query()->where('item_id', $id)->where('type', 'REQUEST')->get() as $msg){
-                if($msg->from_id == \request()->get('to_id')) continue;
-                Message::create([
-                    'item_id' => $id,
-                    'from_id' => \auth()->id(),
-                    'to_id' => $msg->from_id,
-                    'type' => 'DISAPPROVE',
-                    'body' => ''
-                ]);
-            }
         }
+
+        $item->status = 'NOT_RELEVANT';
+        $item->update();
+
         return redirect(URL::to('chats/' . $id));
     }
 }

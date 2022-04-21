@@ -126,7 +126,7 @@ class ItemsController extends Controller
 
         Item::create($attributes);
 
-        return redirect('/sell');
+        return redirect('/sell')->with('success', 'Вы успешно добавили запрос');
     }
 
     public function storeSell()
@@ -157,7 +157,7 @@ class ItemsController extends Controller
 
         Item::create($attributes);
 
-        return redirect('/buy');
+        return redirect('/buy')->with('success', 'Вы успешно добавили запрос');
     }
 
     public function setFilters()
@@ -206,7 +206,7 @@ class ItemsController extends Controller
         $item->city = $attributes['city'];
 
         $item->update();
-        return redirect('/');
+        return redirect('/')->with('success', 'Вы успешно отредактировали запрос');
     }
 
     public function redactSell($id)
@@ -232,7 +232,7 @@ class ItemsController extends Controller
 
         $item->update();
 
-        return redirect('/');
+        return redirect('/')->with('success', 'Вы успешно отредактировали запрос');
     }
 
     public function redactSellDelete($id)
@@ -242,7 +242,7 @@ class ItemsController extends Controller
 
         $item->status = 'NOT_RELEVANT';
         $item->update();
-        return redirect('/');
+        return redirect('/')->with('success', 'Вы успешно удалили запрос');
     }
 
     public function redactBuyDelete($id)
@@ -252,6 +252,6 @@ class ItemsController extends Controller
 
         $item->status = 'NOT_RELEVANT';
         $item->update();
-        return redirect('/');
+        return redirect('/')->with('success', 'Вы успешно удалили запрос');
     }
 }

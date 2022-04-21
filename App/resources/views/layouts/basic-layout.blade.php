@@ -6,6 +6,7 @@
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <script src="{{ mix('/js/app.js') }}"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
 
     <title>Laravel</title>
 </head>
@@ -39,14 +40,17 @@
                         <!-- Settings Dropdown -->
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
                             @auth
-                                <a href="{{\Illuminate\Support\Facades\URL::to('/chats')}}" class="w-4 h-4 w-fit mr-2 flex relative">
-                                    <img src="{{\Illuminate\Support\Facades\URL::to('/img/notification.png')}}" alt="Уведомления">
+                                <a href="{{\Illuminate\Support\Facades\URL::to('/chats')}}"
+                                   class="w-4 h-4 w-fit mr-2 flex relative">
+                                    <img src="{{\Illuminate\Support\Facades\URL::to('/img/notification.png')}}"
+                                         alt="Уведомления">
                                     @php
                                         $user = \Illuminate\Support\Facades\Auth::user()->id;
                                         $msg = \App\Models\Message::query()->where('seen', false)->where('to_id', $user)->get()->count();
                                     @endphp
                                     @if($msg > 0)
-                                        <span class="text-gray-50 bg-red-500 h-fit w-fit rounded-full px-1.5 py-0.5 text-xs absolute inset-0">{{$msg}}</span>
+                                        <span
+                                            class="text-gray-50 bg-red-500 h-fit w-fit rounded-full px-1.5 py-0.5 text-xs absolute inset-0">{{$msg}}</span>
                                     @endif
                                 </a>
                                 <x-dropdown align="right" width="48">
@@ -174,6 +178,15 @@
             </nav>
         </div>
     </footer>
+
+    @if(session()->has('success'))
+        <div x-data="{show: true}"
+             x-init="setTimeout(() => show = false, 4000)"
+             x-show="show"
+             class="fixed bg-blue-500 text-blue-50 text-sm rounded-xl bottom-3 right-3 py-2 px-4">
+            {{ session('success') }}
+        </div>
+    @endif
 </div>
 </body>
 </html>

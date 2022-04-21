@@ -64,9 +64,11 @@
                         })->get())
                     @php($last = null)
                     @foreach($msg as $message)
-                        @php($message->seen = true)
-                        @php($message->update())
+                        @php($rec = $message->from_id)
+
                         @if($message->type == null)
+                            @php($message->seen = true)
+                            @php($message->update())
 
                             @if($message->from_id == $user)
                                 <div
@@ -78,7 +80,6 @@
 
                             @if($message->to_id == $user)
                                 <div class="bg-gray-200 w-fit p-2 mb-2 rounded-xl">
-                                    @php($rec = $message->from_id)
                                     @unless($last == 'to')
                                         <div class="text-gray-500 text-sm">
                                             {{\App\Models\User::find($message->from_id)->name}}</div>
@@ -88,6 +89,8 @@
                                 </div>
                             @endif
                         @else
+                            @php($message->seen = true)
+                            @php($message->update())
                             @if($message->type == 'REQUEST')
                                 <div class="my-2">
                                     Пользователь оставил заявку
